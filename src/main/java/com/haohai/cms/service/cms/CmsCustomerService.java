@@ -1,38 +1,26 @@
 package com.haohai.cms.service.cms;
 
 import com.haohai.cms.common.ResponseMessage;
-import com.haohai.cms.model.TCmsCustomerAddress;
-import com.haohai.cms.model.dto.CmsCustomerReq;
 
 /**
  * Created by Administrator on 2017/7/20.
  */
 public interface CmsCustomerService {
-    /**
-     * 增加收获地址
-     * @return
-     */
-    ResponseMessage addCustomerAddress(TCmsCustomerAddress tCmsCustomerAddress);
+
 
     /**
-     * 修改收获地址
-     * @param tCmsCustomerAddress
+     * 获取所有用户信息
+     * @param 
      * @return
      */
-    ResponseMessage updateCustomerAddress(TCmsCustomerAddress tCmsCustomerAddress);
+    ResponseMessage getAllUser();
 
     /**
-     * 登录接口
-     * @param tCmsCustomerAddress
+     * 获取所有用户信息
+     * @param
      * @return
      */
-    ResponseMessage login(CmsCustomerReq tCmsCustomerAddress);
+    ResponseMessage getUserById(int id);
 
-    /**
-     * 注册接口
-     * @param tCmsCustomerAddress
-     * @return
-     */
-    ResponseMessage register(CmsCustomerReq tCmsCustomerAddress);
-    
+
 }

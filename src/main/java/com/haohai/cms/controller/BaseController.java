@@ -1,10 +1,6 @@
 package com.haohai.cms.controller;
 
-import com.haohai.cms.common.util.Constants;
-import com.haohai.cms.model.TSysuser;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.util.WebUtils;
-import javax.servlet.http.HttpServletRequest;
 
 public class BaseController {
 
@@ -60,13 +56,5 @@ public class BaseController {
 	@Value("${EXPRESS_APPCODE}")
 	public String EXPRESS_APPCODE;
 
-	protected TSysuser getSessionUserWeb(HttpServletRequest req) {
-		return (TSysuser) WebUtils.getSessionAttribute(req,
-				Constants.USER_SESSION_KEY);
-	}
-
-	protected void setSessionManager(HttpServletRequest req, Object user) {
-		WebUtils.setSessionAttribute(req, Constants.USER_SESSION_KEY, user);
-	}
 
 }

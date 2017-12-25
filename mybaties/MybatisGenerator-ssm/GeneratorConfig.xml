@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+
+	<classPathEntry   location="./mysql-connector-java-5.1.21.jar"/>
+
+	<context id="TestContext" defaultModelType="flat">
+		<plugin type="org.mybatis.generator.plugins.PaginationPlugin" />
+		<plugin type="org.mybatis.generator.plugins.CustomOrCriteriaPlugin" />
+		<plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="Example$" />
+            <property name="replaceString" value="Criteria" />
+        </plugin>
+		<commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+		<!-- 
+			****************wms****************wms****************wms****************wms****************wms****************wms**************** 
+		-->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:MySQL://59.110.215.202:3306/app_cms_1" userId="root"
+                        password="wanghao" />
+
+		<javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+
+<javaModelGenerator targetPackage="com.haohai.cms.model"  targetProject="D:\idea-workspace\huahangwanghao\ssm_shard-jdbc\src\main\java" >
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper"  targetProject="D:\idea-workspace\huahangwanghao\ssm_shard-jdbc\src\main\resources" >
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator targetPackage="com.haohai.cms.mapper"
+                             targetProject="D:\idea-workspace\huahangwanghao\ssm_shard-jdbc\src\main\java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+
+
+		<!--<table tableName="t_cms_good"/> 
+		<table tableName="t_cms_good_comment"/> 
+		<table tableName="t_cms_good_read"/> 
+		<table tableName="t_cms_customer_address"/> 
+		<table tableName="t_cms_customer"/> 
+		<table tableName="t_cms_shopping_car"/> 
+		<table tableName="t_cms_customer_good"/> 
+		<table tableName="t_cms_customer_order"/>
+		<table tableName="t_cms_good_category"/>-->
+		
+			<table tableName="t_user"/> 
+		
+		
+		
+		
+		
+		
+		
+		
+	</context>
+
+</generatorConfiguration>
