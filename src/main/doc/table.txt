@@ -1,0 +1,145 @@
+
+
+xxxx表设计
+
+1.客户表
+	id
+	账号
+	密码
+	姓名
+	身份证号码
+	手机号
+	邮箱
+	创建时间
+	修改时间
+	推荐人
+
+1.1地址表  t_cms_customer_address
+	地址Id
+	客户id
+	详细地址
+	创建时间
+	修改时间
+
+1.2优惠券
+	客户Id
+	优惠Id
+	优惠内容
+
+2.购物订单表  t_cms_customer_order
+	订单id    order_id
+	客户id    customer_id
+	手机号    customer_phone
+	收货地址  customer_address
+	总金额    order_amount
+	创建时间  crt_date
+	修改时间  mdf_date
+	订单状态    data_flag  0:失效 1:正常
+
+
+3.购物商品表  t_cms_customer_good    
+	商品主键Id   good_id
+	客户Id   customer_id
+	订单Id   order_id
+	商品Id   cms_good_id
+	商品规格  cms_good_guige
+	商品名称 good_name
+	原价     good_amount_old
+	现价     good_amount_now
+	图片路径  good_img_src
+	创建时间  crt_date
+	修改时间  mdf_date
+	快递单号  express_id   ***
+	快递公司  express_type  ***
+	商品状态  good_status  0:未发货 1:发货中 2:发货完成 3:退货
+	购买数量  good_count
+	
+
+4.后台商品表
+	商品Id
+	商品类别(1,2,3)
+	商品父Id
+	商品名称
+	库存数量
+	进件金额(改成价格区间)
+
+	商品描述，
+	商品品牌，
+	产品规格，
+	保质期限，
+	产品详情（可以是个html），
+	商品轮播图
+	
+
+5.后台用户/角色/权限 还是之前的吧
+
+
+
+6.购物车的表 t_cms_shopping_car
+    主键Id   car_id
+    客户Id   customer_id
+    客户购买商品主键id   customer_good_id
+    商品主键Id     cms_good_id
+    商品规格  cms_good_guige
+    订单Id    order_id
+    开始时间 crt_date
+    结束时间 end_date
+    状态     shopping_car_status 0:放弃,1:在购物车,2:付款成功
+    购物车中商品数量     car_good_count
+    现在价格                good_now_price
+    原来价格                good_old_price
+    
+
+
+    
+7.涉及到物流表 肯定是调用三方的接口
+    主键id 
+    订单Id
+    商品Id
+    流转的地方 应该是一条记录有几个流转的记录
+
+
+
+8.广告轮播图表  t_cms_ad
+    主键Id          ad_id
+    显示图片路径     ad_img_src
+    点击图片打开url  ad_url
+    状态             ad_status 0:失效 1:正常
+    创建时间        crt_date
+    修改时间        mdf_date
+        类型  type  (商品主键  cms_good_id  知道点击哪个对应哪个图片 )
+    描述            ad_dec
+    顺序              ad_sort
+    标题              ad_title
+    
+
+9.商品浏览记录表  t_cms_good_read
+浏览Id    read_id
+商品主键Id  cms_good_id
+客户Id     customer_id
+浏览时间    crt_date
+
+
+
+10.购买评论表 t_cms_good_comment
+主键Id    comment_id
+客户Id    customer_id
+客户购买记录Id    customer_good_id
+商品Id        cms_good_id
+评论内容       comment_content
+评论时间    crt_date
+星级      comment_start
+状态      data_flag  0:正常 1:关闭
+
+
+
+11.分类表 t_cms_good_category
+分类Id        category_id
+分类名称        category_name
+parent_id       category_parent_id
+分类等级        category_level
+显示图片        category_img_path
+点击url          category_url
+标志位          data_flag
+
+

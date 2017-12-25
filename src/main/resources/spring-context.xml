@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.1.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+    http://www.springframework.org/schema/task
+    http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+
+	
+	<!--加载db属性文件-->
+	<context:property-placeholder location="classpath:db.properties" />
+	<!--
+	
+	http://blog.csdn.net/medivhq/article/details/50945311
+	
+	第一:配置头上必须有:xmlns:task="http://www.springframework.org/schema/task"
+	其次:xsi:schemaLocation必须为其添加：
+		http://www.springframework.org/schema/task 
+		http://www.springframework.org/schema/task/spring-task.xsd
+	第三: 进行包扫描
+		然后spring扫描过程必须涵盖定时任务类所在的目录：
+		<context:component-scan base-package="com.xx.xx" />
+	第四:启动定时任务 <task:annotation-driven/>
+	
+	第五:设置定时任务:
+		@Component
+		@Lazy(value=false)
+		public class MyQuartzs {
+		
+			@Scheduled(cron = "*/5 * * * * ?")//每隔5秒执行一次
+			public void test() throws Exception {
+				System.out.println("Test is working......");
+			}
+	
+	-->
+	<task:annotation-driven />
+	<context:annotation-config />
+
+
+	<!--
+	
+	对于controller的扫面文件
+	
+	-->
+	<context:component-scan base-package="com.haohai.cms">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="url" value="${mysql.url}" />
+		<property name="username" value="${mysql.username}" />
+		<property name="password" value="${mysql.password}" />
+		<property name="filters" value="stat" />
+		<property name="maxActive" value="20" />
+		<property name="initialSize" value="1" />
+		<property name="maxWait" value="60000" />
+		<property name="minIdle" value="1" />
+		<property name="timeBetweenEvictionRunsMillis" value="3000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:/mapper/*.xml" />
+		<!--<property name="typeAliasesPackage" value="com.haohai.cms.model" />-->
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+						dialect=mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+
+
+	
+	<!--
+	
+		对于mapper文件的扫面 ,并且同时配置了datasource
+	-->
+	
+	<bean id="mapperScanerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage"
+				  value="com.haohai.cms.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+
+	<!--
+		事务配置start
+	-->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- spring线程池的配置 -->
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- 线程池维护线程的最少数量 -->
+		<property name="corePoolSize" value="5" />
+		<!-- 线程池维护线程所允许的空闲时间  -->
+		<property name="keepAliveSeconds" value="300" />
+		<!-- 线程池维护线程的最大数量 -->
+		<property name="maxPoolSize" value="10" />
+		<!-- 线程池所使用的缓冲队列  -->
+		<property name="queueCapacity" value="25" />
+	</bean>
+	
+
+</beans>

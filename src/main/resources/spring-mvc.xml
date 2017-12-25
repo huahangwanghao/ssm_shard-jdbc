@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/aop
+    	http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+    	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd ">
+		
+	<!--
+	可以简单理解,就是把一些配置文件 读取到代码里面,
+	比如在配置文件里面写的 
+	SUCCESS='成功'
+	所有返回成功的地方, 都用这个SUCCESS 就可以啦.
+	-->
+	<context:property-placeholder location="classpath:config.properties" ignore-unresolvable="true" />
+	
+	
+	
+	<!---
+	http://blog.csdn.net/tony308001970/article/details/72676622
+	ConversionSerivce 最重点的目的是将http的请求参数以什么形式进行类型转换，简单来说HTTP请求都是以String的方式进行传输的，但是我们是入参却是多姿多彩的数据类型，所以SpringMVC是通过ConversionSerivce进行参数的绑定转换的。
+其实定义相应的converter的思想非常简单，首先要知道converter是处理什么类型转什么类型的，其次就是做实际的转型任务。
+	-->
+	
+	<mvc:annotation-driven conversion-service="conversionService">
+		<mvc:message-converters register-defaults="true">
+			<bean class="com.haohai.cms.common.converter.CustomStringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!-- 自定义参数绑定
+	 这个结合上面的那个转换器, 对于日期类型的由字符串转换为日期类型 .
+	 -->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- 转换器 -->
+		<property name="converters">
+			<list>
+				<!-- 日期类型转换 -->
+				<bean class="com.haohai.cms.common.converter.CustomDateConverter"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/pages" />
+		<property name="suffix" value=".html" />
+	</bean>
+
+	<bean id="exceptionResolver" class="com.haohai.cms.common.exception.ExceptionResolver"></bean>
+	<!-- 统一异常处理 -->
+	<!--<bean class="com.haohai.cms.common.exception.CustomExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="com.haohai.cms.common.exception.CustomException">error/errorpage</prop>
+			</props>
+		</property>
+	</bean>-->
+	
+	<!-- 文件上传配置 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="20000000"></property>
+	</bean>
+	
+	<mvc:resources location="/superui/" mapping="/assets/**" />
+	<context:component-scan base-package="com.haohai.cms">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/*/*" />
+			<bean class="com.haohai.cms.common.inteceptor.SpringInteceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	
+	<!--
+		主要是对于aop的代理方式
+		后面的值默认是false, 表示使用哦jdk动态带俩
+		如果设置为true, 则使用cglib代理
+	-->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	
+	<!-- spring异步配置@async -->
+	<task:executor id="myexecutor" pool-size="30"/>
+	<task:annotation-driven executor="myexecutor"/>
+	
+</beans>
