@@ -343,15 +343,23 @@
 	    </dependency>
 
         <!--sharding-jdbc start-->
+        <!-- https://mvnrepository.com/artifact/io.shardingjdbc/sharding-jdbc-core -->
         <dependency>
-            <groupId>com.dangdang</groupId>
+            <groupId>io.shardingjdbc</groupId>
             <artifactId>sharding-jdbc-core</artifactId>
-            <version>1.4.2</version>
+            <version>2.0.0.M1</version>
         </dependency>
+
         <dependency>
             <groupId>com.dangdang</groupId>
             <artifactId>sharding-jdbc-config-spring</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.shardingjdbc</groupId>
+            <artifactId>sharding-jdbc-spring-namespace</artifactId>
+            <version>2.0.0.M1</version>
         </dependency>
         
         <!--sharding-jdbc end-->
