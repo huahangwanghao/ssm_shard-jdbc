@@ -3,11 +3,15 @@ package com.haohai.cms.service.cms.impl;/**
  */
 
 import com.haohai.cms.common.ResponseMessage;
+import com.haohai.cms.mapper.TUserMapper;
 import com.haohai.cms.service.cms.CmsCustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * 客户service
@@ -20,7 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class CmsCustomerServiceImpl implements CmsCustomerService {
 
     private static final Logger logger = LoggerFactory.getLogger(CmsCustomerServiceImpl.class);
-   
+    @Autowired
+    private TUserMapper tUserMapper;
+    
+    
     /**
      * 获取所有用户信息
      *
@@ -28,7 +35,9 @@ public class CmsCustomerServiceImpl implements CmsCustomerService {
      */
     @Override
     public ResponseMessage getAllUser() {
-        return null;
+        ResponseMessage rm= ResponseMessage.createSuccessMsg(tUserMapper.getAllUser());
+        logger.info("返回结果:"+rm);
+        return rm;
     }
 
     /**
@@ -38,6 +47,9 @@ public class CmsCustomerServiceImpl implements CmsCustomerService {
      */
     @Override
     public ResponseMessage getUserById(int id) {
-        return null;
+        System.out.println(tUserMapper);
+        ResponseMessage rm= ResponseMessage.createSuccessMsg(tUserMapper.getUserById(id));
+        logger.info("返回结果:"+rm);
+        return rm;
     }
 }

@@ -18,17 +18,17 @@ import java.util.LinkedHashSet;
  * @author zhangwentao
  *
  */
-public class MemberSingleKeyTableShardingAlgorithm implements SingleKeyTableShardingAlgorithm<Long> {
+public class MemberSingleKeyTableShardingAlgorithm implements SingleKeyTableShardingAlgorithm<Integer> {
     private static final Logger logger = LoggerFactory.getLogger(MemberSingleKeyTableShardingAlgorithm.class);
     /**
      * sql between 规则
      */
-    public Collection<String> doBetweenSharding(Collection<String> tableNames, ShardingValue<Long> shardingValue) {
+    public Collection<String> doBetweenSharding(Collection<String> tableNames, ShardingValue<Integer> shardingValue) {
         logger.info("sql between 规则--->tableNames:"+tableNames+",shardingValue="+shardingValue);
         Collection<String> result = new LinkedHashSet<String>(tableNames.size());
-        Range<Long> range = (Range<Long>) shardingValue.getValueRange();
-        for (long i = range.lowerEndpoint(); i <= range.upperEndpoint(); i++) {
-            Long modValue = i % 100;
+        Range<Integer> range = (Range<Integer>) shardingValue.getValueRange();
+        for (Integer i = range.lowerEndpoint(); i <= range.upperEndpoint(); i++) {
+            Integer modValue = i % 100;
             String modStr = modValue < 10 ? "0" + modValue : modValue.toString();
             for (String each : tableNames) {
                 if (each.endsWith(modStr)) {
@@ -42,26 +42,36 @@ public class MemberSingleKeyTableShardingAlgorithm implements SingleKeyTableShar
     /**
      * sql == 规则
      */
-    public String doEqualSharding(Collection<String> tableNames, ShardingValue<Long> shardingValue) {
+    public String doEqualSharding(Collection<String> tableNames, ShardingValue<Integer> shardingValue) {
         logger.info("sql == 规则--->tableNames:"+tableNames+",shardingValue="+shardingValue);
-        Long modValue = shardingValue.getValue() % 100;
-        String modStr = modValue < 10 ? "0" + modValue : modValue.toString();
+        Integer modValue = shardingValue.getValue() % 2;
         for (String each : tableNames) {
-            if (each.endsWith(modStr)) {
+            if (each.endsWith("_"+modValue)) {
                 return each;
             }
         }
         throw new IllegalArgumentException();
+
+        /****
+         * Long modValue = shardingValue.getValue() % 100;
+         String modStr = modValue < 10 ? "0" + modValue : modValue.toString();
+         for (String each : tableNames) {
+         if (each.endsWith(modStr)) {
+         return each;
+         }
+         }
+         throw new IllegalArgumentException();
+         */
     }
 
     /**
      * sql in 规则
      */
-    public Collection<String> doInSharding(Collection<String> tableNames, ShardingValue<Long> shardingValue) {
+    public Collection<String> doInSharding(Collection<String> tableNames, ShardingValue<Integer> shardingValue) {
         logger.info("sql in 规则--->tableNames:"+tableNames+",shardingValue="+shardingValue);
         Collection<String> result = new LinkedHashSet<String>(tableNames.size());
-        for (long value : shardingValue.getValues()) {
-            Long modValue = value % 100;
+        for (Integer value : shardingValue.getValues()) {
+            Integer modValue = value % 100;
             String modStr = modValue < 10 ? "0" + modValue : modValue.toString();
             for (String tableName : tableNames) {
                 if (tableName.endsWith(modStr)) {

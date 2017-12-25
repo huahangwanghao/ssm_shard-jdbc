@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:task="http://www.springframework.org/schema/task"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:task="http://www.springframework.org/schema/task" xmlns:rdb="http://www.dangdang.com/schema/ddframe/rdb"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-4.1.xsd
@@ -12,10 +12,9 @@
     http://www.springframework.org/schema/tx 
     http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
     http://www.springframework.org/schema/task
-    http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+    http://www.springframework.org/schema/task/spring-task-4.1.xsd http://www.dangdang.com/schema/ddframe/rdb http://www.dangdang.com/schema/ddframe/rdb/rdb.xsd">
 
 	
-	<import resource="spring-sharding.xml"></import>
 	
 	<!--加载db属性文件-->
 	<context:property-placeholder location="classpath:db.properties" />
@@ -49,7 +48,7 @@
 
 	<!--
 	
-	去掉的扫面文件
+	去掉的扫面controller文件
 	
 	-->
 	<context:component-scan base-package="com.haohai.cms">
@@ -98,21 +97,26 @@
 		<property name="testOnReturn" value="false" />
 	</bean>
 
+
+	<rdb:strategy id="tableShardingStrategy" sharding-columns="user_id" algorithm-class="com.haohai.cms.util.MemberSingleKeyTableShardingAlgorithm"/>
+
+	<rdb:data-source id="shardingDataSource">
+		<rdb:sharding-rule data-sources="dataSource0,dataSource1" default-data-source="dataSource0">
+			<rdb:table-rules>
+				<rdb:table-rule logic-table="t_user"  actual-tables="t_user_0,t_user_1"  table-strategy="tableShardingStrategy"/>
+			</rdb:table-rules>
+			<rdb:binding-table-rules>
+				<rdb:binding-table-rule logic-tables="t_user"/>
+			</rdb:binding-table-rules>
+		</rdb:sharding-rule>
+	</rdb:data-source>
+
+
+
+
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="shardingDataSource" />
 		<property name="mapperLocations" value="classpath:/mapper/*.xml" />
-		<!--<property name="typeAliasesPackage" value="com.haohai.cms.model" />-->
-		<property name="plugins">
-			<array>
-				<bean class="com.github.pagehelper.PageHelper">
-					<property name="properties">
-						<value>
-						dialect=mysql
-						</value>
-					</property>
-				</bean>
-			</array>
-		</property>
 	</bean>
 
 
