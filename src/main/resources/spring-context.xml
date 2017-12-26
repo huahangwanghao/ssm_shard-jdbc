@@ -104,9 +104,9 @@
 	</bean>
 
 
+	<!--<bean id="dBAlgorithm" class="com.haohai.cms.util.DBAlgorithm"></bean>-->
 
-
-	<sharding:standard-strategy id="dbShardingStrategy" sharding-column="user_id" precise-algorithm-class="com.haohai.cms.util.DBAlgorithm"/>
+	<sharding:standard-strategy id="dbShardingStrategy" sharding-column="user_id" precise-algorithm-class="com.haohai.cms.util.DBAlgorithm"  />
 	<sharding:standard-strategy id="tableShardingStrategy" sharding-column="user_id" precise-algorithm-class="com.haohai.cms.util.TableAlgorithm"/>
 	<!--<rdb:standard-strategy id="tableShardingStrategy" sharding-columns="user_id" algorithm-class="com.haohai.cms.util.MemberSingleKeyTableShardingAlgorithm"/>-->
 	<!--<rdb:strategy id="dbShardingStrategy" sharding-columns="user_id" algorithm-class="com.haohai.cms.util.MemberSingleKeyTableShardingAlgorithm"/>-->

@@ -36,7 +36,7 @@ public class CmsCustomerServiceImplTest {
 
     @Test
     public void getUserById() throws Exception {
-        cmsCustomerService.getUserById(2);
+        cmsCustomerService.getUserById(3);
     }
 
 }
